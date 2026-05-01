@@ -1,0 +1,11 @@
+{
+  "id": "nest-mysql",
+  "name": "NestJS + MySQL",
+  "config": {
+    "database": "mysql",
+    "dbModulePath": "src/database/db",
+    "modelPaths": ["src/database/tables.js"],
+    "queryPaths": ["src/database/queries"],
+    "syncApiKey": "YOUR_PROJECT_API_KEY"
+  }
+}

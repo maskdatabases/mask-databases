@@ -1,0 +1,11 @@
+{
+  "id": "next-mysql",
+  "name": "Next.js + MySQL",
+  "config": {
+    "database": "mysql",
+    "dbModulePath": "src/lib/db",
+    "modelPaths": ["src/db/tables.js"],
+    "queryPaths": ["src/db/queries"],
+    "syncApiKey": "YOUR_PROJECT_API_KEY"
+  }
+}

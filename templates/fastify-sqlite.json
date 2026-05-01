@@ -1,0 +1,11 @@
+{
+  "id": "fastify-sqlite",
+  "name": "Fastify + SQLite",
+  "config": {
+    "database": "sqlite",
+    "dbModulePath": "src/db",
+    "modelPaths": ["src/tables.js"],
+    "queryPaths": ["src/queries"],
+    "syncApiKey": "YOUR_PROJECT_API_KEY"
+  }
+}

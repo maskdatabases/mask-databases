@@ -1,0 +1,11 @@
+{
+  "id": "bun-postgres",
+  "name": "Bun + PostgreSQL",
+  "config": {
+    "database": "postgres",
+    "dbModulePath": "src/db",
+    "modelPaths": ["src/tables.js"],
+    "queryPaths": ["src/queries"],
+    "syncApiKey": "YOUR_PROJECT_API_KEY"
+  }
+}

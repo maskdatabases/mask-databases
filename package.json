@@ -1,0 +1,70 @@
+{
+  "name": "mask-databases",
+  "version": "0.1.0-beta.1",
+  "description": "Natural language database layer for Node.js — write prompts, Mask compiles them into real queries. Docs: https://maskdatabases.com/docs",
+  "main": "src/runtime/index.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/runtime/index.js"
+    },
+    "./compiler": {
+      "types": "./types/compiler.d.ts",
+      "default": "./src/compiler/api.js"
+    },
+    "./sync-engine": {
+      "types": "./types/sync-engine.d.ts",
+      "default": "./src/sync/sync-engine.js"
+    }
+  },
+  "files": [
+    "src/",
+    "scripts/",
+    "templates/",
+    "types/",
+    "README.md",
+    "!**/__tests__/"
+  ],
+  "bin": {
+    "mask-compile": "src/compiler/cli.js",
+    "mask-sync-fetch": "src/compiler/cli-fetch.js",
+    "mask-sync-push": "src/compiler/cli-push.js",
+    "mask-delete": "src/compiler/cli-delete.js",
+    "mask-init": "scripts/mask-init-cli.js",
+    "mask-migrate": "scripts/mask-migrate-cli.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maskdatabases/mask-databases"
+  },
+  "homepage": "https://maskdatabases.com",
+  "bugs": {
+    "url": "https://github.com/maskdatabases/mask-databases/issues"
+  },
+  "keywords": [
+    "ai",
+    "database",
+    "mongodb",
+    "mongoose",
+    "neo4j",
+    "cypher",
+    "compiler",
+    "natural-language"
+  ],
+  "scripts": {
+    "postinstall": "node scripts/init-mask-dirs.js",
+    "prepublishOnly": "node -e \"require('./src/runtime/index.js'); require('./src/compiler/api.js'); console.log('[mask-databases] package integrity check passed.');\""
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "chokidar": "^4.0.1"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "express-mongodb",
+  "name": "Express + MongoDB",
+  "config": {
+    "database": "mongodb",
+    "dbModulePath": "src/db",
+    "modelPaths": ["src/tables.js"],
+    "queryPaths": ["src/queries"],
+    "syncApiKey": "YOUR_PROJECT_API_KEY"
+  }
+}
