@@ -9,7 +9,7 @@ Natural language database layer for Node.js and TypeScript. Write prompts in cod
 ## Install
 
 ```bash
-npm install mask-databases@beta
+npm install mask-databases
 ```
 
 ## Supported Databases

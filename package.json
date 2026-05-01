@@ -1,6 +1,6 @@
 {
   "name": "mask-databases",
-  "version": "0.1.0-beta.1",
+  "version": "1.0.0",
   "description": "Natural language database layer for Node.js — write prompts, Mask compiles them into real queries. Docs: https://maskdatabases.com/docs",
   "main": "src/runtime/index.js",
   "types": "types/index.d.ts",
