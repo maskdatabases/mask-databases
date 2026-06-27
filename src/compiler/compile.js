@@ -6,12 +6,11 @@ const chokidar = require('chokidar');
 const { getPaths, getProjectRoot, resolveMaskConfigJsonPath } = require('../paths');
 const { ensureMaskDirs, loadJsonFile } = require('./fs-utils');
 const {
-  getSyncConfig,
+  buildSyncConfigFromMaskConfig,
   loadMergedQueriesPromptMap,
   loadMergedQueriesMetadata,
   loadMergedQueriesFailedPrompts,
   loadMergedModelsFailedPrompts,
-  loadPromptsRegisteryFromMaskConfig,
   loadMergedModelsPromptMap,
   loadMergedModelsMetadata,
   ensureSyncDirs,
@@ -176,14 +175,10 @@ async function compileOnce(compileOptions) {
   // Fail fast: config must have database, dbModulePath, and syncApiKey
   const { config } = loadConfigWithMeta(paths, loadOpts);
   ensureMaskDirs(paths);
-  let syncConfig = getSyncConfig(paths);
-  if (!syncConfig && config.syncApiKey) {
-    const base =
-      config.syncBaseUrl && typeof config.syncBaseUrl === 'string' && String(config.syncBaseUrl).trim()
-        ? String(config.syncBaseUrl).trim().replace(/\/$/, '')
-        : MASK_DATABASES_DEFAULT_URL;
-    syncConfig = { apiKey: String(config.syncApiKey).trim(), baseUrl: base };
-  }
+  // Persist overrideConfig before any disk reads so .mask/compile-config.json never
+  // overrides mask.compile.cjs (e.g. stale syncApiKey from a prior account/project).
+  materializeMaskConfigJson(projectRoot, config);
+  const syncConfig = buildSyncConfigFromMaskConfig(config);
   const useSync = !!syncConfig;
   if (useSync) ensureSyncDirs(paths);
 
@@ -217,12 +212,17 @@ async function compileOnce(compileOptions) {
   ]);
 
   const promptsFromSource = discoverAllPrompts(projectRoot, profile);
-  const registery = loadPromptsRegisteryFromMaskConfig(paths);
+  // Use registery from the resolved overrideConfig (config), not the stale on-disk snapshot.
+  // loadPromptsRegisteryFromMaskConfig reads .mask/compile-config.json, which is only written
+  // at the end of a successful compile — so first run or registery edits would be invisible.
+  const registeryObj =
+    config.registery && typeof config.registery === 'object' && !Array.isArray(config.registery)
+      ? config.registery
+      : null;
   const modelPromptsInSource = discoverAllModelPrompts(projectRoot, profile);
 
   // Build the set of prompt texts we actually compile. Resolve mask-<key> from registery.
   const toCompile = new Set();
-  const registeryObj = registery && typeof registery === 'object' && !Array.isArray(registery) ? registery : null;
   for (const p of promptsFromSource) {
     if (p.startsWith(MASK_PREFIX)) {
       const key = p.slice(MASK_PREFIX.length);

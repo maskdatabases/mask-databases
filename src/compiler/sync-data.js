@@ -10,16 +10,22 @@ const {
   markLocalSliceSynced
 } = require('../sync/sync-engine');
 
+function buildSyncConfigFromMaskConfig(config) {
+  if (!config || typeof config !== 'object') return null;
+  const apiKey = config.syncApiKey;
+  if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) return null;
+  const baseUrl =
+    config.syncBaseUrl && typeof config.syncBaseUrl === 'string' && config.syncBaseUrl.trim()
+      ? config.syncBaseUrl.trim().replace(/\/$/, '')
+      : MASK_DATABASES_DEFAULT_URL;
+  return { apiKey: apiKey.trim(), baseUrl };
+}
+
 function getSyncConfig(paths) {
   if (!paths || !paths.config || !fs.existsSync(paths.config)) return null;
   const config = readMaskConfigRawObject(paths);
   if (!config) return null;
-  const apiKey = config.syncApiKey;
-  if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) return null;
-  const baseUrl = (config.syncBaseUrl && typeof config.syncBaseUrl === 'string' && config.syncBaseUrl.trim())
-    ? config.syncBaseUrl.trim().replace(/\/$/, '')
-    : MASK_DATABASES_DEFAULT_URL;
-  return { apiKey: apiKey.trim(), baseUrl };
+  return buildSyncConfigFromMaskConfig(config);
 }
 
 /**
@@ -446,6 +452,7 @@ module.exports = {
   MASK_DATABASES_DEFAULT_URL,
   CHUNK_THRESHOLD_BYTES,
   getSyncConfig,
+  buildSyncConfigFromMaskConfig,
   splitLocalDataIntoChunks,
   loadMergedQueriesPromptMap,
   loadMergedQueriesMetadata,
